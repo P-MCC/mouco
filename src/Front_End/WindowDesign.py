@@ -2,6 +2,7 @@ import subprocess
 from PyQt5.QtWidgets import *
 import sys
 from PyQt5.QtCore import Qt
+import os
 
 
 class Window(QMainWindow):
@@ -220,19 +221,161 @@ class Window(QMainWindow):
         button.clicked.connect(print_slider_value)
         return main
 
+
     def ui3(self):
-        main_layout = QVBoxLayout()
-        main_layout.addWidget(QLabel('page 3'))
-        main_layout.addStretch(5)
-        main = QWidget()
-        main.setLayout(main_layout)
-        return main
+        main_layout = QVBoxLayout()  # Use QVBoxLayout for the main layout
 
+        # Create a horizontal layout for the buttons
+        button_layout = QHBoxLayout()
 
+        # Create the buttons
+        button1 = QPushButton("Execute Macros")
+        button2 = QPushButton("Record Macros")
 
+        # Create a stacked widget to hold the content widgets
+        stacked_widget = QStackedWidget()
 
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     ex = Window()
-#     ex.show()
-#     sys.exit(app.exec_())
+        # Create the content widgets for each button
+        widget1 = QWidget()
+        widget2 = QWidget()
+
+        # Create the layouts for the content widgets
+        layout1 = QVBoxLayout()
+        layout2 = QVBoxLayout()
+
+        # Create the labels for each widget
+        label1 = QLabel("Button 1 Widget")
+        label2 = QLabel("Button 2 Widget")
+
+        # Add the labels to the corresponding layouts
+        layout1.addWidget(label1)
+        layout2.addWidget(label2)
+
+        # Set the layouts for the content widgets
+        widget1.setLayout(layout1)
+        widget2.setLayout(layout2)
+
+        # Add the content widgets to the stacked widget
+        stacked_widget.addWidget(widget1)
+        stacked_widget.addWidget(widget2)
+
+        # Slot function to switch the visible widget based on the clicked button
+        def switch_widget(button):
+            if button == button1:
+                stacked_widget.setCurrentWidget(widget1)
+                dropdown.setVisible(True)
+                execute_button.setVisible(True)
+                label1.setVisible(True)
+                select_record_label.setVisible(True)
+                record_label.setVisible(False)
+                record_input.setVisible(False)
+                record_button.setVisible(False)
+            elif button == button2:
+                stacked_widget.setCurrentWidget(widget2)
+                dropdown.setVisible(False)
+                execute_button.setVisible(False)
+                label1.setVisible(False)
+                select_record_label.setVisible(False)
+                record_label.setVisible(True)
+                record_input.setVisible(True)
+                record_button.setVisible(True)
+                
+
+        # Connect the clicked signal of each button to the slot function
+        button1.clicked.connect(lambda: switch_widget(button1))
+        button2.clicked.connect(lambda: switch_widget(button2))
+
+        # Add the buttons to the horizontal layout
+        button_layout.addWidget(button1)
+        button_layout.addWidget(button2)
+
+        # Add the button layout to the main layout
+        main_layout.addLayout(button_layout)
+
+        # Create a horizontal layout for the widgets
+        widget_layout = QHBoxLayout()
+
+        # Create the dropdown box
+        dropdown = QComboBox()
+
+        # Construct the directory path relative to the current file
+        current_file_dir = os.path.dirname(os.path.abspath(__file__))
+        directory_path = os.path.join(current_file_dir, "..", "..", "Saved_Macros")
+
+        # Populate the dropdown box with file names from the directory
+        file_names = os.listdir(directory_path)
+        dropdown.addItems(file_names)
+
+        # Create the "Execute Macros" button
+        execute_button = QPushButton("Execute")
+
+        # Slot function to handle the execution of macros
+        def execute_macros():
+            selected_file = dropdown.currentText()
+            # Implement the logic to execute the selected macro file
+            print(f"Executing macro: {selected_file}")
+            subprocess.call(f"python src/Back_End/MacroExecutor.py {(selected_file)} main", shell=True)
+
+        # Connect the clicked signal of the button to the execute_macros slot function
+        execute_button.clicked.connect(execute_macros)
+        
+        select_record_label = QLabel("Select Macro Record:")
+
+        # Create a widget to hold the dropdown box and button
+        widget = QWidget()
+        widget_layout.addWidget(select_record_label)
+        widget_layout.addWidget(dropdown)
+        widget_layout.addWidget(execute_button, alignment=Qt.AlignCenter)
+        widget.setLayout(widget_layout)
+
+        # Create a vertical layout for the record widget
+        record_layout = QVBoxLayout()
+
+        # Create a horizontal layout for the label and input area
+        record_input_layout = QHBoxLayout()
+
+        # Create the label for the record input
+        record_label = QLabel("Record Name:")
+
+        # Create the input area
+        record_input = QLineEdit()
+
+        # Create the "Record" button
+        record_button = QPushButton("Record")
+        
+        def record_macros():
+            new_macro_file = record_input.text()
+            # Implement the logic to execute the selected macro file
+            print(f"New macro: {new_macro_file}")
+            subprocess.call(f"python src/Back_End/MacroSaver.py {(new_macro_file)} main", shell=True)
+        
+        record_button.clicked.connect(record_macros)
+
+        # Add the label and input area to the record input layout
+        record_input_layout.addWidget(record_label)
+        record_input_layout.addWidget(record_input)
+
+        # Add the input area and button to the record layout
+        record_layout.addLayout(record_input_layout)
+        record_layout.addWidget(record_button, alignment=Qt.AlignCenter)
+        
+
+        # Create a widget to hold the record layout
+        record_widget = QWidget()
+        record_widget.setLayout(record_layout)
+
+        # Add the widgets to the main layout
+        main_layout.addWidget(widget)
+        main_layout.addWidget(record_widget)
+
+        # Add the stacked widget to the main layout
+        main_layout.addWidget(stacked_widget)
+
+        # Set the initial state as button1 clicked (widget1 visible)
+        switch_widget(button1)
+
+        # Create a widget to hold the layout
+        main_widget = QWidget()
+        main_widget.setLayout(main_layout)
+
+        return main_widget

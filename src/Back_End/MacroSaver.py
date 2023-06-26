@@ -11,7 +11,7 @@ import os
 # List to store mouse click positions and scroll events
 mouse_events = []
 
-def record_mouse_events(q):
+def record_mouse_events(csvname, q):
     def on_click(x, y, button, pressed):
         if pressed:
             # Add mouse click event to list
@@ -38,7 +38,7 @@ def record_mouse_events(q):
         if keyboard.is_pressed("esc"):
             # Put "KILL" message in queue to signal main process to exit
             print('-----------------------------------')
-            write_mouse_events_to_csv()
+            write_mouse_events_to_csv(csvname)
             for event in mouse_events:
                 print(f"Mouse event recorded: {event}")
             q.put("KILL")
@@ -53,27 +53,28 @@ def repeat_mouse_events(q):
         elif event['event_type'] == 'Scroll':
             pynput.mouse.Controller().scroll(0, event['scroll_amount'])
 
-def write_mouse_events_to_csv():
+def write_mouse_events_to_csv(csvname):
     # Create the "Saved_Macros" directory if it doesn't exist
     # if not os.path.exists("Saved_Macros"):
     #     os.makedirs("Saved_Macros")
 
     # Create a copy of mouse_events list
+    name = csvname + ".csv"
     events_to_write = list(mouse_events)
 
     # Write mouse events to a CSV file in the "Saved_Macros" directory
-    file_path = os.path.join("Saved_Macros", "mouse_events.csv")
+    file_path = os.path.join("Saved_Macros", name)
     with open(file_path, 'w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=['x', 'y', 'event_type', 'click_type', 'scroll_direction', 'scroll_amount'])
         writer.writeheader()
         writer.writerows(events_to_write)
 
 
-def main():
+def main(csvname):
     q = multiprocessing.Queue()
 
     # Start processes to record mouse events and repeat mouse events
-    process_record_mouse_events = multiprocessing.Process(target=record_mouse_events, args=(q,))
+    process_record_mouse_events = multiprocessing.Process(target=record_mouse_events, args=(csvname,q,))
     process_repeat_mouse_events = multiprocessing.Process(target=repeat_mouse_events, args=(q,))
 
     process_record_mouse_events.start()
@@ -93,4 +94,8 @@ def main():
     sys.exit()
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) >= 1:
+        slider_value = sys.argv[1]
+        main(slider_value)
+    else:
+        print("No slider value provided.")

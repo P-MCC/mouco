@@ -1,6 +1,5 @@
 import Front_End.WindowDesign as wd
 
-import subprocess
 from PyQt5.QtWidgets import *
 import sys
 from PyQt5.QtCore import Qt
