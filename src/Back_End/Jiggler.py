@@ -38,9 +38,9 @@ def keyChecker(q):
    
          
 
-def main():
+def main(st):
     q = multiprocessing.Queue()
-    sleepTime = int(input("Enter the jiggle period in seconds:"))
+    sleepTime = st #int(input("Enter the jiggle period in seconds:"))
     
     print("To end the program press esc")
     print("Starting to jiggle in {} seconds!".format(sleepTime))
@@ -70,9 +70,10 @@ def main():
                 break  
     
     print("End of jiggling :(")
-    sys.exit()
+    
+    #sys.exit()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
