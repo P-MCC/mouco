@@ -26,6 +26,12 @@ def record_mouse_events(q):
 
     # Create mouse listeners to capture mouse events
     mouse_listener = pynput.mouse.Listener(on_click=on_click, on_scroll=on_scroll)
+    
+    print("Press the ` key to start recording")
+    
+    # Wait for the user to press the "`" key to start recording
+    keyboard.wait("`")
+    
     mouse_listener.start()
 
     while True:

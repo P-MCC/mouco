@@ -30,9 +30,9 @@ def keyChecker(q):
         q.put("KILL JIGGLE")
     
     
-def main():
+def main(slider_value):
     q = multiprocessing.Queue()
-    sleepTime = float(input("Enter the click period in seconds (ex. 0.2):"))
+    sleepTime = float(slider_value)#float(input("Enter the click period in seconds (ex. 0.2):"))
     
     print("To end the program press esc")
     print("To start the program press `")
@@ -67,5 +67,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) >= 1:
+        slider_value = sys.argv[1]
+        main(slider_value)
+    else:
+        print("No slider value provided.")
 

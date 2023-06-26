@@ -38,9 +38,11 @@ def keyChecker(q):
    
          
 
-def main(st):
+def main(slider_value):
+    slider_value = sys.argv[1]
+    
     q = multiprocessing.Queue()
-    sleepTime = st #int(input("Enter the jiggle period in seconds:"))
+    sleepTime = int(slider_value) #int(input("Enter the jiggle period in seconds:"))
     
     print("To end the program press esc")
     print("Starting to jiggle in {} seconds!".format(sleepTime))
@@ -74,6 +76,10 @@ def main(st):
     #sys.exit()
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    if len(sys.argv) >= 1:
+        slider_value = sys.argv[1]
+        main(slider_value)
+    else:
+        print("No slider value provided.")
 

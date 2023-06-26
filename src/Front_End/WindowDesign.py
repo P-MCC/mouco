@@ -99,7 +99,7 @@ class Window(QMainWindow):
 
         # Create slider
         slider = QSlider(Qt.Horizontal)
-        slider.setMinimum(0)
+        slider.setMinimum(1)
         slider.setMaximum(100)
         slider.setTickPosition(QSlider.TicksBelow)
         slider.setTickInterval(5)
@@ -143,15 +143,10 @@ class Window(QMainWindow):
         # Print assigned value when button is clicked
         def print_slider_value():
             print(f"Assigned value: {self.sliderValue}")
-            # subprocess.call("python src/Back_End/Jiggler.py", shell=True)
+            
+            subprocess.call(f"python src/Back_End/Jiggler.py {self.sliderValue} main", shell=True)
             
             
-            from Back_End.Jiggler import main as Jiggler
-
-            if __name__ == "__main__":
-    
-                Jiggler(self.sliderValue)
-
 
         button.clicked.connect(print_slider_value)
         return main
@@ -159,11 +154,70 @@ class Window(QMainWindow):
 
 
     def ui2(self): 
-        main_layout = QVBoxLayout()
-        main_layout.addWidget(QLabel('page 2'))
-        main_layout.addStretch(5)
         main = QWidget()
-        main.setLayout(main_layout)
+        main_layout = QVBoxLayout(main)
+        main_layout.addStretch(0)  # Add initial stretch for padding
+
+        # Create label
+        label = QLabel('Clicks Per Second')
+        label.setAlignment(Qt.AlignCenter)
+        main_layout.addWidget(label)
+
+        # Create slider and input field layout
+        slider_layout = QHBoxLayout()
+
+        # Create slider
+        slider = QSlider(Qt.Horizontal)
+        slider.setMinimum(1)
+        slider.setMaximum(10000)
+        slider.setTickPosition(QSlider.TicksBelow)
+        slider.setTickInterval(100)
+        slider.setSingleStep(1)
+        slider.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        slider_layout.addWidget(slider)
+
+        # Create input field
+        input_field = QLineEdit()
+        input_field.setFixedWidth(40)
+        slider_layout.addWidget(input_field)
+        
+        main_layout.addLayout(slider_layout)
+
+        # Add stretch for vertical centering
+        main_layout.addStretch(1)
+
+        # Create button
+        button = QPushButton('Burst')
+        button.setObjectName('burstButton')
+        main_layout.addWidget(button, alignment=Qt.AlignCenter)
+
+        # Add stretch for padding at the bottom
+        main_layout.addStretch(4)
+
+        # Synchronize slider with input field and assign value to sliderValue
+        def update_slider_value():
+            value = input_field.text()
+            if value.isdigit():
+                slider.setValue(int(value))
+                self.sliderValue = int(value)  # Assign value to sliderValue
+
+        def update_input_field():
+            value = str(slider.value())
+            input_field.setText(value)
+            self.sliderValue = slider.value()  # Assign value to sliderValue
+
+        input_field.textChanged.connect(update_slider_value)
+        slider.valueChanged.connect(update_input_field)
+
+        # Print assigned value when button is clicked
+        def print_slider_value():
+            print(f"Assigned value: {self.sliderValue}")
+            
+            subprocess.call(f"python src/Back_End/ClickBurster.py {(1/self.sliderValue)} main", shell=True)
+            
+            
+
+        button.clicked.connect(print_slider_value)
         return main
 
     def ui3(self):
@@ -177,8 +231,8 @@ class Window(QMainWindow):
 
 
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = Window()
-    ex.show()
-    sys.exit(app.exec_())
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     ex = Window()
+#     ex.show()
+#     sys.exit(app.exec_())
