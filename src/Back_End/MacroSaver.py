@@ -21,7 +21,7 @@ def record_mouse_events(csvname, q):
 
     def on_scroll(x, y, dx, dy):
         # Add scroll event to list
-        mouse_events.append({'x': None, 'y': None, 'event_type': 'Scroll', 'click_type': None, 'scroll_direction': 'Up' if dy > 0 else 'Down', 'scroll_amount': dy})
+        mouse_events.append({'x': x, 'y': y, 'event_type': 'Scroll', 'click_type': None, 'scroll_direction': 'Up' if dy > 0 else 'Down', 'scroll_amount': dy})
         print(f"Scroll event recorded: {'Up' if dy > 0 else 'Down'} - Amount: {dy}")
 
     # Create mouse listeners to capture mouse events
