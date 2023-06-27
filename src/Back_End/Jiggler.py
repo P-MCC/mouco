@@ -39,7 +39,7 @@ def keyChecker(q):
          
 
 def main(slider_value):
-    slider_value = sys.argv[1]
+    # slider_value = sys.argv[1]
     
     q = multiprocessing.Queue()
     sleepTime = int(slider_value) #int(input("Enter the jiggle period in seconds:"))
