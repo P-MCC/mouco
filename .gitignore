@@ -174,3 +174,4 @@ pyrightconfig.json
 
 designer/
 src/Back_End/macroextets.py
+src/Back_End/test.py

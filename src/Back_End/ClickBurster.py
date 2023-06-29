@@ -7,7 +7,7 @@ from pynput.mouse import Button, Controller
 def burst(sleepTime):
     mouse = Controller()
     
-    #TODO add a start stop func0.tionality to ` button (it only starts (when ` is pressed) and terminates (when esc is pressed) the program)
+    # #TODO add a start stop func0.tionality to ` button (it only starts (when ` is pressed) and terminates (when esc is pressed) the program)
     
     recorded = keyboard.record(until="`")
     print(recorded)
@@ -19,6 +19,21 @@ def burst(sleepTime):
             mouse.release(Button.left)
             time.sleep(sleepTime)
             
+            
+    
+    # keyboard.wait("`")
+    
+
+
+    # while(True):
+    #     mouse.press(Button.left)
+    #     mouse.release(Button.left)
+    #     time.sleep(sleepTime)
+            
+            
+            
+    
+            
 
 
 def keyChecker(q):
@@ -28,6 +43,8 @@ def keyChecker(q):
         print("Esc pressed")
         print("KILL JIGGLE!!!")
         q.put("KILL JIGGLE")
+    
+    
     
     
 def main(slider_value):
