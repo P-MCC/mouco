@@ -19,7 +19,7 @@ def execute_mouse_events_from_csv(file_path, q):
                 x = int(row['x'])
                 y = int(row['y'])
                 click_type = row['click_type']
-                delay = 0.2  # Delay in seconds before executing the click event
+                delay = 0.2  
                 time.sleep(delay)
                 pyautogui.moveTo(x, y)
                 if click_type == 'Left':
@@ -34,12 +34,12 @@ def execute_mouse_events_from_csv(file_path, q):
                 y = int(row['y'])
                 pyautogui.moveTo(x, y)
                 scroll_amount = int(row['scroll_amount'])
-                delay = 0.01  # Delay in seconds before executing the scroll event
+                delay = 0.01  
                 time.sleep(delay)
                 pyautogui.scroll(scroll_amount, x=x, y=y)
-                # self.mouse.scroll(0, scroll_amount)
+               
 
-        q.put("KILL JIGGLE")
+        q.put("KILL EXECUTE")
 
 
 def keyChecker(q):
@@ -47,22 +47,20 @@ def keyChecker(q):
     print(recorded)
     if (recorded != None):
         print("Esc pressed")
-        print("KILL JIGGLE!!!")
-        q.put("KILL JIGGLE")
+        print("KILL EXECUTE!!!")
+        q.put("KILL EXECUTE")
 
 
 def main(slider_value):
-    # Create an instance of MouseEventExecutor
-    # Specify the path to the CSV file containing the mouse events
+    
     csv_file_path = 'Saved_Macros/' + slider_value
     
-    # Execute the mouse events from the CSV file
     q = multiprocessing.Queue()
-    # int(input("Enter the jiggle period in seconds:"))
+    
     inputFile = str(csv_file_path)
 
     print("To end the program press esc")
-    print("Starting to jiggle in {} seconds!".format(inputFile))
+    print("Starting the execution from the file  {}".format(inputFile))
 
     ProcessJiggle = multiprocessing.Process(
         target=execute_mouse_events_from_csv, args=(inputFile, q,))
@@ -76,7 +74,7 @@ def main(slider_value):
     while True:
         msg = q.get()
 
-        if msg == "KILL JIGGLE":
+        if msg == "KILL EXECUTE":
             print("Terminating...")
 
             ProcessJiggle.terminate()
@@ -85,11 +83,11 @@ def main(slider_value):
             if not ProcessJiggle.is_alive():
                 ProcessJiggle.join(timeout=1.0)
                 print("Joined successfully")
-                print("Jiggle process terminated!")
+                print("Execution process terminated!")
                 q.close()
                 break
 
-    print("End of jiggling :(")
+    print("End of Macro Execution :(")
 
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
