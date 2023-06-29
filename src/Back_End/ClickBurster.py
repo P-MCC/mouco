@@ -13,43 +13,26 @@ def burst(sleepTime):
     print(recorded)
     print(type(recorded))
     if (recorded != None):
-        #Clicks the mouse and the sleeps for the specified time
         while(True):
             mouse.press(Button.left)
             mouse.release(Button.left)
-            time.sleep(sleepTime)
-            
-            
+            time.sleep(sleepTime)  
     
-    # keyboard.wait("`")
-    
-
-
-    # while(True):
-    #     mouse.press(Button.left)
-    #     mouse.release(Button.left)
-    #     time.sleep(sleepTime)
-            
-            
-            
-    
-            
-
 
 def keyChecker(q):
     recorded = keyboard.record(until="esc")
     print(recorded)
     if (recorded != None):
         print("Esc pressed")
-        print("KILL JIGGLE!!!")
-        q.put("KILL JIGGLE")
+        print("KILL BURST!!!")
+        q.put("KILL BURST")
     
     
     
     
 def main(slider_value):
     q = multiprocessing.Queue()
-    sleepTime = float(slider_value)#float(input("Enter the click period in seconds (ex. 0.2):"))
+    sleepTime = float(slider_value)
     
     print("To end the program press esc")
     print("To start the program press `")
@@ -66,7 +49,7 @@ def main(slider_value):
     while True:
         msg = q.get()
         
-        if msg == "KILL JIGGLE":            
+        if msg == "KILL BURST":            
             print("Terminating...")
             
             ProcessJiggle.terminate()
@@ -74,8 +57,7 @@ def main(slider_value):
             
             if not ProcessJiggle.is_alive():               
                 ProcessJiggle.join(timeout=1.0)               
-                print("Burst successfully")
-                print("Burst process terminated!")                                                 
+                print("Burst process successfully terminated!")                                              
                 q.close()
                 break  
     
